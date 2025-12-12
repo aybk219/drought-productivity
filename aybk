@@ -1,0 +1,65 @@
+# drought_simple.py - 确保能运行的版本
+import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+
+print("=" * 40)
+print("干旱地区生产力预测系统")
+print("=" * 40)
+
+# 1. 创建简单数据
+print("\n1. 创建数据...")
+data = np.array([
+    [40, 20, 25],
+    [35, 10, 15],
+    [25, 30, 30],
+    [40, 5, 10],
+    [28, 25, 28],
+    [38, 8, 12],
+    [32, 18, 22],
+    [27, 22, 26]
+])
+
+# 生产力值
+productivity = np.array([75, 45, 85, 35, 78, 42, 68, 72])
+
+print(f"数据形状: {data.shape}")
+print(f"样本数: {len(productivity)}")
+
+# 2. 训练模型
+print("\n2. 训练模型...")
+model = RandomForestRegressor(n_estimators=50, random_state=42)
+model.fit(data, productivity)
+print("模型训练完成!")
+
+# 3. 查看特征重要性
+print("\n3. 特征重要性:")
+print(f"温度: {model.feature_importances_[0]:.3f}")
+print(f"降水: {model.feature_importances_[1]:.3f}")
+print(f"土壤湿度: {model.feature_importances_[2]:.3f}")
+
+# 4. 进行预测
+print("\n4. 预测新样本:")
+new_data = np.array([[32, 15, 20]])  # 温度32°C, 降水15mm, 土壤湿度20%
+prediction = model.predict(new_data)[0]
+
+print(f"\n输入数据:")
+print(f"  温度: {new_data[0][0]}°C")
+print(f"  降水: {new_data[0][1]}mm")
+print(f"  土壤湿度: {new_data[0][2]}%")
+print(f"\n预测生产力: {prediction:.1f}")
+
+# 5. 多个预测示例
+print("\n5. 更多预测示例:")
+test_cases = [
+    [28, 30, 28],  # 凉爽，多雨
+    [38, 5, 10],   # 炎热，干旱
+    [25, 40, 35]   # 凉爽，湿润
+]
+
+for i, case in enumerate(test_cases):
+    pred = model.predict([case])[0]
+    print(f"  案例{i+1}: {case} -> {pred:.1f}")
+
+print("\n" + "=" * 40)
+print("系统运行完成!")
+print("=" * 40)
