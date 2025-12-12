@@ -1,0 +1,58 @@
+# drought_pure_python.py Құрғақшылық өнімділігін болжайтын қарапайым жүйе
+import random
+
+print("=" * 40)
+print("干旱地区生产力预测系统")
+print("=" * 40)
+
+# 模拟数据
+data = [
+    {"temp": 40, "rain": 20, "soil": 25, "productivity": 75},
+    {"temp": 35, "rain": 10, "soil": 15, "productivity": 45},
+    {"temp": 25, "rain": 30, "soil": 30, "productivity": 85},
+    {"temp": 40, "rain": 5, "soil": 10, "productivity": 35}
+]
+
+print("\n训练数据:")
+for i, d in enumerate(data):
+    print(f"  样本{i+1}: 温度{d['temp']}°C, 降水{d['rain']}mm, 土壤湿度{d['soil']}% -> 生产力{d['productivity']}")
+
+# 简单预测函数
+def predict_productivity(temp, rain, soil):
+    """基于规则的简单预测"""
+    # 基本分数
+    score = 50
+    
+    # 温度影响
+    if temp < 30:
+        score += 10
+    elif temp > 35:
+        score -= 15
+    else:
+        score -= 5
+    
+    # 降水影响
+    score += rain * 0.5
+    
+    # 土壤湿度影响
+    score += soil * 0.8
+    
+    # 随机波动
+    score += random.uniform(-5, 5)
+    
+    return max(20, min(100, score))  # 限制在20-100之间
+
+print("\n预测测试:")
+test_cases = [
+    (32, 15, 20),  # 测试数据1
+    (28, 25, 28),  # 测试数据2
+    (38, 8, 12)    # 测试数据3
+]
+
+for i, (temp, rain, soil) in enumerate(test_cases):
+    prediction = predict_productivity(temp, rain, soil)
+    print(f"  案例{i+1}: 温度{temp}°C, 降水{rain}mm, 土壤湿度{soil}% -> 预测生产力: {prediction:.1f}")
+
+print("\n" + "=" * 40)
+print("系统运行完成!")
+print("=" * 40)
